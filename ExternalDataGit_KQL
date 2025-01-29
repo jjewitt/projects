@@ -1,0 +1,8 @@
+let git_url = "https://<your-git-host>/<your-org>/<your-repo>/raw/<branch>/<file-path>";
+let pat_token = "<your-personal-access-token>";
+let headers = pack('Authorization', strcat('Bearer ', pat_token));
+externaldata(Column1:string, Column2:string, Column3:string)
+[
+    git_url
+]
+with (format='csv', headers=headers, ignoreFirstRecord=true)
