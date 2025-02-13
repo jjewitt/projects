@@ -89,4 +89,21 @@ foreach ($row in $csvData) {
         $geoResponse = Query-Device-Geolocation -machineId $row.MachineID -token $authToken
         $row.Response = $geoResponse
 
-        # Extract Lat
+        # Extract Latitude & Longitude
+        if ($geoResponse -match "Lat:(.+?), Lon:(.+?), Accuracy:(.+?) meters") {
+            $latitude = $matches[1].Trim()
+            $longitude = $matches[2].Trim()
+
+            # Get Country from Geolocation
+            $country = Get-Country-From-Geolocation -latitude $latitude -longitude $longitude
+            $row.Country = $country
+        } else {
+            $row.Country = "Error"
+        }
+    }
+}
+
+# Save Updated Data Back to CSV
+$csvData | Export-Csv -Path $csvFilePath -NoTypeInformation -Force
+
+Write-Output "Geolocation data updated successfully!"
